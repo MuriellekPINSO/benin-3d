@@ -1,0 +1,3 @@
+# GeoJSON bruts : ils ne servent qu'à scripts/build-geo.mjs, en local.
+# Le résultat versionné est src/data/geo.json, qui suffit à l'exécution.
+raw/
