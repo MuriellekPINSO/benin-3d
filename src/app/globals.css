@@ -1,26 +1,965 @@
 @import "tailwindcss";
 
+/*
+  Palette tirée des matières du pays : nuit et indigo des tissus teints à l'indigo,
+  kaolin des autels vodun, latérite des pistes du nord, laiton des fontes d'Abomey.
+  Ces valeurs sont dupliquées dans src/lib/theme.ts — garder les deux alignées.
+*/
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ink: #05080f;
+  --indigo: #16224a;
+  --indigo-lit: #2b3c74;
+  --chalk: #f1ebdd;
+  --laterite: #c9552c;
+  --brass: #e0a83c;
+
+  --text: var(--chalk);
+  --text-dim: color-mix(in srgb, var(--chalk) 68%, transparent);
+  --text-faint: color-mix(in srgb, var(--chalk) 40%, transparent);
+  --rule: color-mix(in srgb, var(--chalk) 16%, transparent);
+
+  /* Google Sans porte titres et texte ; l'alias garde les deux rôles nommés
+     séparément, au cas où un jour un caractère d'affichage distinct revienne. */
+  --font-display: var(--font-body);
+
+  --gutter: clamp(1.25rem, 4vw, 4.5rem);
+  --card: min(30rem, 42vw);
+
+  color-scheme: dark;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  background: var(--ink);
+  scroll-behavior: smooth;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--brass);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 3px;
+}
+
+a {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--brass) 60%, transparent);
+  text-underline-offset: 0.25em;
+}
+
+a:hover {
+  color: var(--brass);
+}
+
+/* ------------------------------------------------------------------ scène */
+
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: var(--ink);
+}
+
+.stage__canvas {
+  opacity: 0;
+  transition: opacity 900ms ease;
+}
+
+.stage__canvas.is-ready {
+  opacity: 1;
+}
+
+.scroller {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------- relevé d'instrument */
+
+.hud {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(0.9rem, 2.4vh, 1.6rem);
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  pointer-events: none;
+  white-space: nowrap;
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+.hud__gauge {
+  position: relative;
+  width: 5.5rem;
+  height: 1px;
+  background: var(--rule);
+}
+
+.hud__gaugeFill {
+  position: absolute;
+  inset: 0;
+  background: var(--brass);
+  transform-origin: left;
+  transform: scaleX(0.01);
+}
+
+.hud__readout {
+  display: flex;
+  gap: 1.125rem;
+  margin: 0;
+}
+
+.hud__readout div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.hud__readout dt {
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.hud__readout dd {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+}
+
+/* ------------------------------------------------------------------ sections */
+
+.panel {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding: clamp(5rem, 12vh, 8rem) var(--gutter);
+}
+
+/* Voile de lisibilité : le texte se pose sur la carte sans boîte ni verre dépoli. */
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--ink) 92%, transparent) 0%,
+    color-mix(in srgb, var(--ink) 72%, transparent) 32%,
+    transparent 62%
+  );
+}
+
+.panel--right {
+  justify-content: flex-end;
+}
+
+.panel--right::before {
+  background: linear-gradient(
+    to left,
+    color-mix(in srgb, var(--ink) 92%, transparent) 0%,
+    color-mix(in srgb, var(--ink) 72%, transparent) 32%,
+    transparent 62%
+  );
+}
+
+.panel--hero {
+  justify-content: center;
+  text-align: center;
+}
+
+.panel--hero::before {
+  background: radial-gradient(
+    ellipse 70% 60% at 50% 55%,
+    color-mix(in srgb, var(--ink) 86%, transparent) 0%,
+    color-mix(in srgb, var(--ink) 45%, transparent) 55%,
+    transparent 80%
+  );
+}
+
+.panel__card {
+  position: relative;
+  width: var(--card);
+  pointer-events: auto;
+}
+
+.panel--hero .panel__card {
+  width: min(46rem, 92vw);
+}
+
+/* Repère de section : la station caméra réellement atteinte, pas un numéro d'ordre. */
+.station {
+  display: flex;
+  gap: 1.125rem;
+  margin: 0 0 1.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.panel--hero .station {
+  justify-content: center;
+  border-top: none;
+  border-bottom: 1px solid var(--rule);
+  padding: 0 0 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.station__alt {
+  color: var(--brass);
+}
+
+.panel__title {
+  margin: 0;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+  line-height: 1.06;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+
+.panel--hero .panel__title {
+  font-weight: 700;
+  font-size: clamp(2.3rem, 10.5vw, 6.5rem);
+  letter-spacing: -0.03em;
+}
+
+.panel__lede {
+  margin: 1.125rem 0 0;
+  color: var(--text-dim);
+  text-wrap: pretty;
+}
+
+.panel--hero .panel__lede {
+  margin-inline: auto;
+  max-width: 38rem;
+  font-size: 1.125rem;
+}
+
+.hero__hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 3rem 0 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.hero__rule {
+  width: 2.5rem;
+  height: 1px;
+  background: var(--brass);
+  transform-origin: left;
+  animation: sweep 2.8s ease-in-out infinite;
+}
+
+@keyframes sweep {
+  0%,
+  100% {
+    transform: scaleX(0.25);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__rule {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------------ chiffres */
+
+.stats {
+  list-style: none;
+  margin: 2.25rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem 1.75rem;
+}
+
+.stat {
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--rule);
+}
+
+.stat__label {
+  margin: 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.stat__value {
+  margin: 0.4rem 0 0;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--brass);
+}
+
+.stat__unit {
+  margin-left: 0.35em;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+
+.stat__note {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+
+.stat__source {
+  margin: 0.35rem 0 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--chalk) 26%, transparent);
+}
+
+/* ------------------------------------------------------------------ voisins */
+
+.neighbours {
+  list-style: none;
+  margin: 2.25rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.neighbours li {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: 0.25rem 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--rule);
+}
+
+.neighbours__side {
+  grid-row: span 2;
+  margin: 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+
+.neighbours__name {
+  margin: 0;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+.neighbours__detail {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-dim);
+}
+
+/* ------------------------------------------------------------------ départements */
+
+.depts {
+  margin-top: 2rem;
+}
+
+.depts__caption {
+  caption-side: top;
+  text-align: left;
+  margin-bottom: 1rem;
+  font-size: 0.8125rem;
+  color: var(--text-dim);
+}
+
+.depts__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.depts__table th,
+.depts__table td {
+  padding: 0.5rem 0.5rem 0.5rem 0;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+}
+
+.depts__table thead th {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.5625rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.depts__table tbody th {
+  font-weight: 500;
+}
+
+.depts__table .num {
+  text-align: right;
+  padding-right: 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+}
+
+.depts__table tbody tr {
+  transition: background 160ms ease;
+  cursor: crosshair;
+}
+
+.depts__table tbody tr.is-hot {
+  background: color-mix(in srgb, var(--brass) 14%, transparent);
+}
+
+.depts__table tbody tr.is-hot th,
+.depts__table tbody tr.is-hot .num {
+  color: var(--brass);
+}
+
+.depts__swatch {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.6rem;
+  border-radius: 50%;
+  vertical-align: 0.02em;
+}
+
+.depts__legend {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.25rem 0 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.depts__scale {
+  flex: 1;
+  height: 3px;
+  background: linear-gradient(to right, #101a3c, #33306a, #773e52, #b45733, #e8a93e);
+}
+
+/* ------------------------------------------------------------------ fiche */
+
+.fiche {
+  margin: 2rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 1.75rem;
+}
+
+.fiche div {
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--rule);
+}
+
+.fiche dt {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.fiche dd {
+  margin: 0.3rem 0 0;
+  font-size: 0.9375rem;
+}
+
+/* ------------------------------------------------------------------ patrimoine */
+
+.heritage {
+  list-style: none;
+  margin: 2.25rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.heritage li {
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--rule);
+}
+
+.heritage__where {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.heritage__year {
+  color: var(--brass);
+}
+
+.heritage__name {
+  margin: 0.4rem 0 0;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 1.1875rem;
+  letter-spacing: -0.01em;
+}
+
+.heritage__detail {
+  margin: 0.4rem 0 0;
+  font-size: 0.875rem;
+  color: var(--text-dim);
+}
+
+.split {
+  margin-top: 2.5rem;
+  display: grid;
+  gap: 2rem;
+}
+
+.bars h3,
+.bars__title {
+  margin: 0 0 0.875rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.625rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.bars ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.bars li {
+  display: grid;
+  grid-template-columns: 8rem 1fr 3rem;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.bars__name {
+  color: var(--text-dim);
+}
+
+.bars__track {
+  height: 2px;
+  background: var(--rule);
+}
+
+.bars__fill {
+  display: block;
+  height: 100%;
+  background: var(--laterite);
+}
+
+.bars__value {
+  text-align: right;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+}
+
+.bars__note {
+  margin: 0.75rem 0 0;
+  font-size: 0.75rem;
+  color: var(--text-faint);
+}
+
+/* ------------------------------------------------------------------ sources */
+
+.sources {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.sources li {
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--rule);
+}
+
+.colophon {
+  margin: 2rem 0 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  line-height: 1.7;
+  color: var(--text-faint);
+}
+
+/* ------------------------------------------------------------------ étiquettes 3D */
+
+.pin {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  transition: opacity 220ms ease;
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+/* Le point reste sur la coordonnée ; seul le nom bascule d'un côté ou de l'autre. */
+.pin--right {
+  left: 0;
+  transform: translate(-3px, -50%);
+}
+
+.pin--left {
+  right: 0;
+  flex-direction: row-reverse;
+  transform: translate(3px, -50%);
+}
+
+.pin__dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brass);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.pin__text {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--chalk);
+  text-shadow: 0 1px 6px var(--ink), 0 0 12px var(--ink);
+}
+
+.pin--left .pin__text {
+  align-items: flex-end;
+}
+
+.pin__text em {
+  font-style: normal;
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+}
+
+.pin--country {
+  left: 0;
+  right: auto;
+  transform: translate(-50%, -50%);
+}
+
+.pin--country .pin__dot {
+  display: none;
+}
+
+.pin--country .pin__text {
+  color: color-mix(in srgb, var(--chalk) 42%, transparent);
+  letter-spacing: 0.22em;
+}
+
+/* ------------------------------------------------------------------ étroit */
+
+@media (max-width: 900px) {
+  :root {
+    --card: 100%;
+  }
+
+  /*
+    En écran étroit le voile diagonal ne suffit plus : les sections longues placent
+    leur titre au-dessus d'une carte pleinement éclairée. Le texte devient donc un
+    bandeau opaque ancré en bas, la carte occupe ce qui reste au-dessus.
+  */
+  .panel {
+    align-items: flex-end;
+    /* Le tiers haut reste toujours de la carte, même quand le texte est long. */
+    padding: 30svh 0 4rem;
+  }
+
+  .panel::before,
+  .panel--right::before {
+    display: none;
+  }
+
+  .panel__card {
+    width: 100%;
+    padding: 1.5rem var(--gutter) 2rem;
+    background: var(--ink);
+    border-top: 1px solid var(--rule);
+    box-shadow: 0 -2.5rem 3.5rem 1rem var(--ink);
+  }
+
+  .panel--hero {
+    align-items: center;
+    padding: 0 var(--gutter);
+  }
+
+  .panel--hero::before {
+    display: block;
+  }
+
+  .panel--hero .panel__card {
+    padding: 0;
+    background: none;
+    border-top: none;
+    box-shadow: none;
+  }
+
+  .fiche {
+    gap: 1rem;
+  }
+
+  .stats,
+  .neighbours,
+  .heritage {
+    gap: 1.15rem;
+  }
+
+  .panel__lede {
+    font-size: 0.9375rem;
+  }
+
+  .bars li {
+    grid-template-columns: 6.5rem 1fr 2.75rem;
+  }
+
+  /*
+    Le bandeau de texte peut atteindre le bas de l'écran : le relevé prend alors
+    son propre fond, plutôt que de se superposer aux chiffres.
+  */
+  .hud {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    transform: none;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.45rem var(--gutter);
+    background: var(--ink);
+    border-top: 1px solid var(--rule);
+  }
+
+  .stat__value {
+    font-size: 1.35rem;
+  }
+
+  .stat__note {
+    font-size: 0.75rem;
+  }
+
+  /* La jauge n'a plus la place : le relevé chiffré suffit. */
+  .hud__gauge {
+    display: none;
+  }
+
+  .hud__readout {
+    gap: 0.7rem;
+  }
+
+  .hud__readout dd {
+    font-size: 0.625rem;
+  }
+
+  .pin__text {
+    font-size: 0.5625rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .neighbours li {
+    grid-template-columns: 1fr;
+  }
+
+  .neighbours__side {
+    grid-row: auto;
+  }
+}
+
+.neighbours__name {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.neighbours__km {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--brass);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ bande sonore */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.sound {
+  position: fixed;
+  top: clamp(1rem, 2.6vh, 1.75rem);
+  right: var(--gutter);
+  z-index: 3;
+}
+
+.sound__btn {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.35rem 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--text-faint);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  transition: color 200ms ease;
+}
+
+.sound__btn:hover,
+.sound.is-on .sound__btn {
+  color: var(--text);
+}
+
+.sound__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.sound__bars i {
+  display: block;
+  width: 2px;
+  height: 100%;
+  background: currentColor;
+  transform-origin: bottom;
+  /* Au repos : quatre traits bas et réguliers, le son est coupé. */
+  transform: scaleY(0.34);
+  transition: transform 250ms ease;
+}
+
+.sound.is-on .sound__bars i {
+  background: var(--brass);
+  animation: equalize 780ms ease-in-out infinite alternate;
+}
+
+.sound.is-on .sound__bars i:nth-child(1) {
+  animation-duration: 640ms;
+}
+
+.sound.is-on .sound__bars i:nth-child(2) {
+  animation-duration: 900ms;
+  animation-delay: -220ms;
+}
+
+.sound.is-on .sound__bars i:nth-child(3) {
+  animation-duration: 520ms;
+  animation-delay: -400ms;
+}
+
+.sound.is-on .sound__bars i:nth-child(4) {
+  animation-duration: 820ms;
+  animation-delay: -140ms;
+}
+
+@keyframes equalize {
+  from {
+    transform: scaleY(0.18);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* Sans animation, la barre garde un profil fixe : l'état reste lisible à la couleur. */
+@media (prefers-reduced-motion: reduce) {
+  .sound.is-on .sound__bars i {
+    animation: none;
+    transform: scaleY(0.75);
+  }
 }

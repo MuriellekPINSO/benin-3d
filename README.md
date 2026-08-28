@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bénin 3D
 
-## Getting Started
+Une descente continue de l'orbite basse jusqu'aux douze départements du Bénin.
+La position dans le texte et la position de la caméra au-dessus du pays sont la même
+chose : chaque section possède une station (latitude, longitude, altitude), et le
+défilement interpole entre deux stations consécutives.
 
-First, run the development server:
+Aucune texture, aucune image satellite. Le globe est calculé, et les frontières sont
+tracées à partir de données ouvertes.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev     # http://localhost:3000
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Données
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Deux familles de données, séparées et vérifiables.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Géométrie** — `src/data/geo.json`, produit par `scripts/build-geo.mjs` à partir des
+GeoJSON bruts conservés dans `raw/` :
 
-## Learn More
+| Fichier | Source | Contenu |
+| --- | --- | --- |
+| `raw/land110.geojson` | Natural Earth 1:110m | terres émergées du globe |
+| `raw/adm0_*.geojson` | geoBoundaries gbOpen ADM0 | Bénin et ses quatre voisins |
+| `raw/ben_adm1.geojson` | geoBoundaries gbOpen ADM1 | les 12 départements |
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+node scripts/build-geo.mjs
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Le script aplatit les anneaux, arrondit à trois décimales (~110 m), corrige
+l'orthographe des départements et vérifie qu'il y en a bien douze. Il échoue si le
+GeoJSON contient un nom de département inconnu.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Chiffres** — `src/data/benin.ts`. Chaque valeur porte son millésime et sa source :
+Banque mondiale (indicateurs 2023–2025), INStaD (RGPH4, 2013), CIA World Factbook
+(côte, frontières terrestres), UNESCO, et l'article de synthèse de Wikipédia pour les
+dimensions du territoire. La section « D'où viennent ces chiffres » les liste en clair
+sur la page.
 
-## Deploy on Vercel
+Les valeurs de la Banque mondiale ont été relevées via son API :
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+curl "https://api.worldbank.org/v2/country/BEN/indicator/SP.POP.TOTL?format=json&mrnev=1"
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Comment c'est construit
+
+- `src/lib/descent.ts` — les stations caméra, l'ordre des sections, l'interpolation.
+  Une section connaît le côté où se pose son texte ; la caméra décale sa fenêtre de
+  projection à l'opposé, pour que le pays ne passe jamais sous le panneau. Les deux
+  viennent de la même déclaration : ils ne peuvent pas se désynchroniser.
+- `src/lib/geo.ts` — projection sur la sphère, triangulation des polygones, graticule.
+- `src/components/scene/Scene.tsx` — le globe, les couches, la caméra. Les seuils
+  d'apparition s'expriment par rapport à une section nommée (`at('departements')`)
+  plutôt qu'en nombres bruts : insérer une section ne les décale pas.
+- `src/lib/theme.ts` — la palette, et l'échelle de densité des départements. La clarté
+  augmente avec la densité, pour que la carte se lise sans consulter la légende.
+- `src/lib/hover.ts` — le département survolé, partagé entre la carte 3D et le tableau
+  HTML dans les deux sens.
+
+Le défilement n'entraîne aucun re-render React : il écrit dans l'objet `view`, que la
+boucle de rendu lit à chaque frame.
