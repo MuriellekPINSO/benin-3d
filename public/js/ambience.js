@@ -40,7 +40,7 @@
   btn.id = 'ambience-toggle';
   btn.type = 'button';
   btn.setAttribute('aria-pressed', 'false');
-  btn.innerHTML = 'Son<span class="b" aria-hidden><i></i><i></i><i></i><i></i></span>';
+  btn.innerHTML = 'Sound<span class="b" aria-hidden><i></i><i></i><i></i><i></i></span>';
   document.body.appendChild(btn);
 
   var raf = 0;

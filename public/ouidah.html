@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Arène de Ouidah 3D</title>
+<title>Ouidah Arena 3D</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -64,26 +64,26 @@ button:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){#loader{transition:none}}
 </style>
 
-<canvas id="c" tabindex="0" aria-label="Maquette 3D interactive de l'Arène de Ouidah"></canvas>
-<div id="loader">Construction de l'arène…</div>
+<canvas id="c" tabindex="0" aria-label="Interactive 3D model of the Ouidah Arena"></canvas>
+<div id="loader">Building the arena…</div>
 
 <div class="ui top">
   <div class="panel brand">
-    <a class="back" href="/">← Bénin 3D</a>
-    <div class="eyebrow">Ouidah · Bénin · Vodun Days</div>
-    <h1>Arène de <span>Ouidah</span></h1>
-    <div class="sub">Reconstitution 3D d'après vidéos drone et visite. Proportions estimées.</div>
+    <a class="back" href="/">← Benin 3D</a>
+    <div class="eyebrow">Ouidah · Benin · Vodun Days</div>
+    <h1><span>Ouidah</span> Arena</h1>
+    <div class="sub">3D reconstruction from drone footage and an on-site visit. Proportions estimated.</div>
   </div>
   <div class="ctrl">
-    <div class="panel seg" role="group" aria-label="Mode d'affichage">
-      <button id="mOrbit" aria-pressed="true">Maquette 3D</button>
-      <button id="mTour" aria-pressed="false">Visite 360°</button>
+    <div class="panel seg" role="group" aria-label="Display mode">
+      <button id="mOrbit" aria-pressed="true">3D Model</button>
+      <button id="mTour" aria-pressed="false">360° Tour</button>
     </div>
     <div class="panel seg">
-      <a class="tbtn" href="/voyage.html">↺ Voyage complet</a>
-      <button class="tbtn" id="tNight" aria-pressed="false"><span class="dot"></span>Nuit</button>
-      <button class="tbtn" id="tAuto" aria-pressed="true"><span class="dot"></span>Rotation</button>
-      <button class="tbtn" id="tFull" aria-pressed="false"><span class="dot"></span>Plein écran</button>
+      <a class="tbtn" href="/voyage.html">↺ Full journey</a>
+      <button class="tbtn" id="tNight" aria-pressed="false"><span class="dot"></span>Night</button>
+      <button class="tbtn" id="tAuto" aria-pressed="true"><span class="dot"></span>Rotate</button>
+      <button class="tbtn" id="tFull" aria-pressed="false"><span class="dot"></span>Fullscreen</button>
     </div>
   </div>
 </div>
@@ -95,8 +95,8 @@ button:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
 
 <div class="ui dock">
   <div class="panel hint" id="hint"></div>
-  <nav class="panel spots" id="spots" aria-label="Points de vue de la visite"></nav>
-  <div class="note">Modèle indicatif : formes et dimensions déduites des vidéos, pas de plans officiels.</div>
+  <nav class="panel spots" id="spots" aria-label="Tour viewpoints"></nav>
+  <div class="note">Indicative model: shapes and dimensions inferred from video, not official plans.</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -398,14 +398,14 @@ function setNight(n){
 
 /* ---------- visite 360 : points de vue ---------- */
 const SPOTS=[
- {t:'Parvis d’entrée',d:'Côté ville : parking, jardinières et la façade « Arène de Ouidah » sous sa toiture blanche.',p:[0,-66],eye:1.65,look:[0,7,-46]},
- {t:'Tribune officielle',d:'Sous la grande toiture, face à la piste : la place d’honneur pendant les cérémonies.',p:[0,-32.8],eye:1.3,look:[0,0,8]},
- {t:'Centre de la piste',d:'Le cercle de sable ocre où se déroulent les sorties et danses Vodun, les concerts et spectacles.',p:[0,4],eye:1.65,look:[0,6,-30]},
- {t:'Gradins ouest · haut',d:'Dernier rang, sous les voiles tendues : vue d’ensemble sur la piste et l’ouverture vers la mer.',p:polar(46,-100).toArray().filter((_,i)=>i!==1),eye:1.25,look:[12,0,-2]},
- {t:'Gradins est · bas',d:'Premiers rangs de sièges rouges, au plus près de la piste.',p:polar(35,75).toArray().filter((_,i)=>i!==1),eye:1.25,look:[-12,1,-12]},
- {t:'Esplanade côté mer',d:'L’arène s’ouvre sur l’océan, à proximité de la Porte du Non-Retour.',p:[0,40],eye:1.65,look:[0,3,-12]},
- {t:'Plage de Ouidah',d:'Depuis le sable, l’arène se découpe entre les cocotiers.',p:[-14,96],eye:1.65,look:[0,8,0]},
- {t:'Vue drone',d:'Survol côté terre : l’arène, la plage et l’océan, comme dans les vidéos drone.',p:[-95,-150],y:78,fly:true,look:[0,0,15]},
+ {t:'Entrance forecourt',d:'On the city side: parking, planters, and the “Arène de Ouidah” facade under its white roof.',p:[0,-66],eye:1.65,look:[0,7,-46]},
+ {t:'Official stand',d:'Under the great roof, facing the arena floor: the seat of honor during ceremonies.',p:[0,-32.8],eye:1.3,look:[0,0,8]},
+ {t:'Center of the arena',d:'The ochre sand circle where Vodun processions and dances, concerts, and shows take place.',p:[0,4],eye:1.65,look:[0,6,-30]},
+ {t:'West stands · top row',d:'Back row, under the tensile canopies: a full view of the arena floor and the opening toward the sea.',p:polar(46,-100).toArray().filter((_,i)=>i!==1),eye:1.25,look:[12,0,-2]},
+ {t:'East stands · front row',d:'The first rows of red seats, closest to the arena floor.',p:polar(35,75).toArray().filter((_,i)=>i!==1),eye:1.25,look:[-12,1,-12]},
+ {t:'Esplanade, sea side',d:'The arena opens onto the ocean, close to the Door of No Return.',p:[0,40],eye:1.65,look:[0,3,-12]},
+ {t:'Ouidah beach',d:'From the sand, the arena stands out between the coconut palms.',p:[-14,96],eye:1.65,look:[0,8,0]},
+ {t:'Drone view',d:'A flyover from inland: the arena, the beach, and the ocean, as seen in drone footage.',p:[-95,-150],y:78,fly:true,look:[0,0,15]},
 ];
 function floorAt(x,z){
   const r=Math.hypot(x,z),th=Math.atan2(x,z)/D2R;
@@ -508,8 +508,8 @@ function updateUI(){
   $('tAuto').hidden=t;
   SPOTS.forEach((_,i)=>$('spot'+i).setAttribute('aria-current',t&&S.cur===i));
   $('hint').innerHTML=t
-    ?(touch?'<b>Glisser</b> pour regarder à 360° · <b>Toucher le sol</b> pour avancer · <b>Pincer</b> pour zoomer':'<b>Glisser</b> pour regarder à 360° · <b>Clic au sol</b> pour avancer · <b>ZQSD / flèches</b> pour marcher · <b>Molette</b> zoom')
-    :(touch?'<b>Glisser</b> pour tourner · <b>Pincer</b> pour zoomer · touchez un <b>numéro</b> pour entrer':'<b>Glisser</b> pour tourner · <b>Molette</b> zoom · <b>Clic droit</b> déplacer · cliquez un <b>numéro</b> pour entrer');
+    ?(touch?'<b>Drag</b> to look around · <b>Tap the ground</b> to move · <b>Pinch</b> to zoom':'<b>Drag</b> to look around · <b>Click the ground</b> to move · <b>WASD / arrows</b> to walk · <b>Scroll</b> to zoom')
+    :(touch?'<b>Drag</b> to rotate · <b>Pinch</b> to zoom · tap a <b>number</b> to enter':'<b>Drag</b> to rotate · <b>Scroll</b> to zoom · <b>Right-click</b> to pan · click a <b>number</b> to enter');
   const c=$('card');if(t&&S.cur>=0){c.hidden=false;$('cardN').textContent=S.cur+1;$('cardT').textContent=SPOTS[S.cur].t;$('cardD').textContent=SPOTS[S.cur].d;}else c.hidden=true;
 }
 

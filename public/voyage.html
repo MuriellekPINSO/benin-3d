@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Un cadeau, en 3D — de Cotonou à Ouidah</title>
+<title>A Gift, in 3D — From Cotonou to Ouidah</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -26,24 +26,24 @@ body{margin:0;background:var(--ground);color:var(--text);font-family:"Instrument
 </style>
 
 <div class="stage" id="stage-cotonou">
-  <iframe id="frame-cotonou" src="/cotonou.html" title="Cotonou en 3D"></iframe>
+  <iframe id="frame-cotonou" src="/cotonou.html" title="Cotonou in 3D"></iframe>
 </div>
 <div class="stage" id="stage-ouidah" hidden>
-  <iframe id="frame-ouidah" title="Arène de Ouidah en 3D"></iframe>
+  <iframe id="frame-ouidah" title="Ouidah Arena in 3D"></iframe>
 </div>
 
 <div class="transition" id="transition">
   <div class="transition__inner">
-    <p class="transition__eyebrow">En route</p>
-    <h2>Direction Ouidah</h2>
-    <p>Le long de la côte atlantique, jusqu'à l'arène du Vodun Days.</p>
+    <p class="transition__eyebrow">On the way</p>
+    <h2>Heading to Ouidah</h2>
+    <p>Along the Atlantic coast, to the Vodun Days arena.</p>
     <div class="path"></div>
   </div>
 </div>
 
 <div class="jump">
-  <button id="goto-ouidah">Partir pour Ouidah →</button>
-  <button id="goto-cotonou" hidden>← Retour à Cotonou</button>
+  <button id="goto-ouidah">Head to Ouidah →</button>
+  <button id="goto-cotonou" hidden>← Back to Cotonou</button>
 </div>
 
 <script>
@@ -61,11 +61,11 @@ body{margin:0;background:var(--ground);color:var(--text);font-family:"Instrument
 
   function travel(toOuidah){
     if (toOuidah && !ouidahLoaded) { frameO.src = '/ouidah.html'; ouidahLoaded = true; }
-    eyebrow.textContent = toOuidah ? 'En route' : 'Retour';
-    title.textContent = toOuidah ? 'Direction Ouidah' : 'Retour à Cotonou';
+    eyebrow.textContent = toOuidah ? 'On the way' : 'Heading back';
+    title.textContent = toOuidah ? 'Heading to Ouidah' : 'Back to Cotonou';
     text.textContent = toOuidah
-      ? "Le long de la côte atlantique, jusqu'à l'arène du Vodun Days."
-      : "On repart vers la Corniche, l'Amazone et l'Étoile Rouge.";
+      ? "Along the Atlantic coast, to the Vodun Days arena."
+      : "Back toward the Corniche, the Amazone and Étoile Rouge.";
     trans.querySelectorAll('.path').forEach(function(p){ p.style.animation='none'; p.offsetHeight; p.style.animation=''; });
     var after = trans.querySelector('.path::after');
     trans.classList.add('show');

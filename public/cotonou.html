@@ -59,20 +59,20 @@ button:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}
 }
 </style>
 
-<canvas id="c" tabindex="0" aria-label="Survol 3D de Cotonou, de la Corniche à l'Étoile Rouge"></canvas>
-<div id="loader">Construction de la ville…</div>
+<canvas id="c" tabindex="0" aria-label="3D flyover of Cotonou, from the Corniche to Étoile Rouge"></canvas>
+<div id="loader">Building the city…</div>
 
 <div class="ui top">
   <div class="panel brand">
-    <a class="back" href="/">← Bénin 3D</a>
-    <div class="eyebrow">Cotonou · Bénin · Balade 3D</div>
-    <h1>Cotonou, <span>survolée</span></h1>
-    <div class="sub">Reconstitution 3D d'après photographies des lieux réels. Sept survols, de la Corniche à l'Étoile Rouge.</div>
+    <a class="back" href="/">← Benin 3D</a>
+    <div class="eyebrow">Cotonou · Benin · 3D Tour</div>
+    <h1>Cotonou, <span>from above</span></h1>
+    <div class="sub">3D reconstruction based on real photographs. Seven flyovers, from the Corniche to Étoile Rouge.</div>
   </div>
   <div class="ctrl">
     <div class="panel seg">
-      <a class="tbtn" href="/voyage.html">↺ Voyage complet</a>
-      <button class="tbtn" id="tFull" aria-pressed="false">Plein écran</button>
+      <a class="tbtn" href="/voyage.html">↺ Full journey</a>
+      <button class="tbtn" id="tFull" aria-pressed="false">Fullscreen</button>
     </div>
   </div>
 </div>
@@ -83,9 +83,9 @@ button:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}
 </div>
 
 <div class="ui dock">
-  <div class="panel hint"><b>Cliquez un lieu</b> ci-dessous pour y survoler la ville en orbite lente.</div>
-  <nav class="panel spots" id="spots" aria-label="Lieux du survol"></nav>
-  <div class="note">Décor stylisé, reconstruit d'après photographies — voir docs/REFERENCES.md du projet.</div>
+  <div class="panel hint"><b>Click a place</b> below to orbit slowly over the city.</div>
+  <nav class="panel spots" id="spots" aria-label="Flyover locations"></nav>
+  <div class="note">Stylized scenery, rebuilt from real photographs.</div>
 </div>
 
 <script src="/js/cotonou-scene.js"></script>
