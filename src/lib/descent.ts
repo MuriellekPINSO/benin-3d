@@ -31,6 +31,7 @@ export type SectionId =
   | 'departements'
   | 'economie'
   | 'patrimoine'
+  | 'visite-3d'
   | 'sources'
 
 export const STATIONS: Record<SectionId, Station> = {
@@ -42,7 +43,8 @@ export const STATIONS: Record<SectionId, Station> = {
   departements: { lat: 9.3, lon: 2.31, alt: 1.33, side: 'right' },
   economie: { lat: 8.8, lon: 2.31, alt: 1.27, side: 'left' },
   patrimoine: { lat: 7.2, lon: 2.2, alt: 1.19, side: 'right' },
-  sources: { lat: 9.4, lon: 2.31, alt: 1.62, side: 'left' },
+  'visite-3d': { lat: 6.35, lon: 2.25, alt: 1.09, side: 'left' },
+  sources: { lat: 9.4, lon: 2.31, alt: 1.62, side: 'right' },
 }
 
 export const SECTION_ORDER: SectionId[] = [
@@ -54,6 +56,7 @@ export const SECTION_ORDER: SectionId[] = [
   'departements',
   'economie',
   'patrimoine',
+  'visite-3d',
   'sources',
 ]
 

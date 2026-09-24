@@ -1,0 +1,93 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Cotonou 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#0E1B1A; --panel:rgba(14,27,26,.76); --panel-solid:#132322;
+  --line:rgba(230,246,238,.16); --text:#EAF4EF; --muted:#B9CFC7;
+  --leaf:#4E9D6E; --leaf-ink:#08150F; --sun:#E3B84E;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{margin:0;background:var(--ground);color:var(--text);font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;-webkit-font-smoothing:antialiased}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block;outline:none}
+.ui{position:fixed;left:16px;right:16px;pointer-events:none;z-index:2}
+.ui > *{pointer-events:auto}
+.top{top:calc(env(safe-area-inset-top,0px) + 16px);display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.brand{padding:12px 16px 13px;max-width:360px}
+.back{display:inline-block;margin-bottom:7px;font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.02em}
+.back:hover{color:var(--text)}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--sun);font-weight:600}
+h1{font-family:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;font-weight:800;font-size:26px;line-height:1.02;margin:4px 0 4px;letter-spacing:-.01em;text-wrap:balance}
+h1 span{color:var(--leaf)}
+.sub{font-size:12.5px;color:var(--muted);line-height:1.35}
+.ctrl{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.seg{display:flex;padding:4px;gap:2px}
+.tbtn{appearance:none;border:0;background:transparent;color:var(--text);font:600 13px/1 "Instrument Sans",system-ui,sans-serif;padding:10px 13px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:7px}
+.tbtn:hover{background:rgba(230,246,238,.08)}
+.tbtn[aria-pressed="true"]{background:var(--leaf);color:var(--leaf-ink)}
+button:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}
+.card{bottom:calc(env(safe-area-inset-bottom,0px) + 118px);max-width:380px;padding:12px 16px 14px;right:auto}
+.card .n{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--sun);color:var(--leaf-ink);font:700 12px/1 "Instrument Sans",sans-serif;margin-right:8px;vertical-align:2px}
+.card h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:19px;font-weight:700;margin:0 0 5px;letter-spacing:-.005em}
+.card p{margin:0;font-size:13.5px;line-height:1.45;color:var(--muted)}
+.dock{bottom:calc(env(safe-area-inset-bottom,0px) + 16px);display:flex;flex-direction:column;gap:8px}
+.hint{align-self:flex-start;font-size:12px;color:var(--muted);padding:7px 11px;border-radius:999px}
+.hint b{color:var(--text);font-weight:600}
+.spots{display:flex;gap:6px;overflow-x:auto;padding:6px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+.spots button{flex:0 0 auto;display:flex;align-items:center;gap:8px;appearance:none;border:1px solid transparent;background:rgba(230,246,238,.06);color:var(--text);font:500 13px/1 "Instrument Sans",system-ui,sans-serif;padding:8px 12px 8px 8px;border-radius:10px;cursor:pointer}
+.spots button:hover{background:rgba(230,246,238,.12)}
+.spots button .k{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:rgba(227,184,78,.2);color:var(--sun);font-weight:700;font-size:12px;font-variant-numeric:tabular-nums}
+.spots button[aria-current="true"]{border-color:var(--sun);background:rgba(227,184,78,.14)}
+.spots button[aria-current="true"] .k{background:var(--sun);color:var(--leaf-ink)}
+.note{font-size:11px;color:var(--muted);opacity:.8;padding:0 4px}
+#loader{position:fixed;inset:0;display:grid;place-items:center;background:var(--ground);z-index:5;font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:18px;color:var(--sun);transition:opacity .6s}
+#loader.off{opacity:0;pointer-events:none}
+@media (max-width:640px){
+  h1{font-size:21px}
+  .brand{padding:10px 13px;max-width:none;flex:1 1 100%}
+  .sub{display:none}
+  .ctrl{justify-content:flex-start;flex:1 1 100%}
+  .tbtn{padding:9px 11px;font-size:12.5px}
+  .card{bottom:calc(env(safe-area-inset-bottom,0px) + 112px);max-width:none;right:16px}
+  .card p{font-size:12.5px}
+  .hint{font-size:11px}
+  .note{display:none}
+}
+</style>
+
+<canvas id="c" tabindex="0" aria-label="Survol 3D de Cotonou, de la Corniche à l'Étoile Rouge"></canvas>
+<div id="loader">Construction de la ville…</div>
+
+<div class="ui top">
+  <div class="panel brand">
+    <a class="back" href="/">← Bénin 3D</a>
+    <div class="eyebrow">Cotonou · Bénin · Balade 3D</div>
+    <h1>Cotonou, <span>survolée</span></h1>
+    <div class="sub">Reconstitution 3D d'après photographies des lieux réels. Sept survols, de la Corniche à l'Étoile Rouge.</div>
+  </div>
+  <div class="ctrl">
+    <div class="panel seg">
+      <a class="tbtn" href="/ouidah.html">Voir aussi l’Arène de Ouidah →</a>
+      <button class="tbtn" id="tFull" aria-pressed="false">Plein écran</button>
+    </div>
+  </div>
+</div>
+
+<div class="ui card panel" id="card" hidden>
+  <h2><span class="n" id="cardN">1</span><span id="cardT"></span></h2>
+  <p id="cardD"></p>
+</div>
+
+<div class="ui dock">
+  <div class="panel hint"><b>Cliquez un lieu</b> ci-dessous pour y survoler la ville en orbite lente.</div>
+  <nav class="panel spots" id="spots" aria-label="Lieux du survol"></nav>
+  <div class="note">Décor stylisé, reconstruit d'après photographies — voir docs/REFERENCES.md du projet.</div>
+</div>
+
+<script src="/js/cotonou-scene.js"></script>
+
+</body></html>

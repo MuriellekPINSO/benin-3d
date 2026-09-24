@@ -191,6 +191,25 @@ export default function Page() {
       </Panel>
 
       <Panel
+        id="visite-3d"
+        title="Un cadeau à visiter, en 3D"
+        lede="Sept lieux de Cotonou et l’arène de Ouidah, reconstruits en 3D d’après des photographies réelles — pour qui ne les a jamais vus."
+      >
+        <ul className="sources">
+          <li>
+            <a href="/cotonou.html" target="_blank" rel="noreferrer noopener">
+              Cotonou — Corniche, Amazone, Palais des Congrès, Étoile Rouge →
+            </a>
+          </li>
+          <li>
+            <a href="/ouidah.html" target="_blank" rel="noreferrer noopener">
+              Ouidah — l’arène du Vodun Days →
+            </a>
+          </li>
+        </ul>
+      </Panel>
+
+      <Panel
         id="sources"
         title="D’où viennent ces chiffres"
         lede="Chaque valeur porte son millésime. Les frontières sont des données ouvertes, pas des tracés approximés à la main."
