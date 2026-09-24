@@ -180,6 +180,11 @@ export default function Page() {
               </p>
               <h3 className="heritage__name">{h.name}</h3>
               <p className="heritage__detail">{h.detail}</p>
+              {h.href ? (
+                <a className="heritage__link" href={h.href} target="_blank" rel="noreferrer noopener">
+                  {h.hrefLabel ?? 'En savoir plus'} →
+                </a>
+              ) : null}
             </li>
           ))}
         </ul>

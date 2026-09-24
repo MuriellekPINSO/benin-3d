@@ -569,6 +569,14 @@ a:hover {
   color: var(--text-dim);
 }
 
+.heritage__link {
+  display: inline-block;
+  margin-top: 0.6rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+
 .split {
   margin-top: 2.5rem;
   display: grid;

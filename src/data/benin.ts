@@ -290,6 +290,8 @@ export type Heritage = {
   where: string
   detail: string
   year?: string
+  href?: string
+  hrefLabel?: string
 }
 
 /** Sites inscrits au patrimoine mondial de l'UNESCO, et repères associés. */
@@ -319,6 +321,8 @@ export const HERITAGE: Heritage[] = [
     where: 'Atlantique',
     detail:
       'Point de départ de la route des esclaves vers les Amériques, et l’un des foyers du culte vodun.',
+    href: '/ouidah.html',
+    hrefLabel: 'Visiter l’arène en 3D',
   },
 ]
 
