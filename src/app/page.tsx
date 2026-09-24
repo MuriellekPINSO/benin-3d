@@ -66,7 +66,7 @@ export default function Page() {
             du Bénin
           </>
         }
-        lede="Une bande de terre de 672 kilomètres, du fleuve Niger à l’océan Atlantique. Cette page descend jusqu’à elle. Elle ne montre que des chiffres datés, avec leur source."
+        lede="Une bande de terre de 672 kilomètres, du fleuve Niger à l’océan Atlantique. Cette page descend jusqu’à elle — pour qui la connaît de loin, ou n’en a jamais entendu parler, et n’y a jamais mis les pieds. Chaque chiffre porte sa source ; à la fin, on y marche."
       >
         <p className="hero__hint">
           <span className="hero__rule" aria-hidden />
@@ -169,7 +169,7 @@ export default function Page() {
       <Panel
         id="patrimoine"
         title="Ce qui se transmet"
-        lede="Deux biens inscrits au patrimoine mondial, une cité bâtie sur l’eau, et un port d’où sont partis des centaines de milliers de captifs."
+        lede="Deux biens inscrits au patrimoine mondial, une cité bâtie sur l’eau, et un port d’où sont partis des centaines de milliers de captifs. Cinq de ces lieux se visitent en 3D, juste après."
       >
         <ul className="heritage">
           {HERITAGE.map((h) => (
@@ -192,18 +192,23 @@ export default function Page() {
 
       <Panel
         id="visite-3d"
-        title="Un cadeau à visiter, en 3D"
-        lede="Sept lieux de Cotonou et l’arène de Ouidah, reconstruits en 3D d’après des photographies réelles — pour qui ne les a jamais vus."
+        title="Ce cadeau se visite"
+        lede="Pour un proche parti trop tôt pour connaître Cotonou. Pour qui n’a jamais eu l’occasion ni les moyens du voyage. Sept lieux de Cotonou, de la Corniche à l’Étoile Rouge, puis la route jusqu’à l’arène de Ouidah où se tiennent les Vodun Days — reconstruits en 3D d’après des photographies réelles, à parcourir sans visa ni billet d’avion."
       >
+        <p className="cta-wrap">
+          <a className="cta" href="/voyage.html" target="_blank" rel="noreferrer noopener">
+            Partir en voyage 3D →
+          </a>
+        </p>
         <ul className="sources">
           <li>
             <a href="/cotonou.html" target="_blank" rel="noreferrer noopener">
-              Cotonou — Corniche, Amazone, Palais des Congrès, Étoile Rouge →
+              Cotonou seule — Corniche, Amazone, Palais des Congrès, Étoile Rouge →
             </a>
           </li>
           <li>
             <a href="/ouidah.html" target="_blank" rel="noreferrer noopener">
-              Ouidah — l’arène du Vodun Days →
+              Ouidah seule — l’arène du Vodun Days →
             </a>
           </li>
         </ul>

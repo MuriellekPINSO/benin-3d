@@ -641,6 +641,28 @@ a:hover {
   color: var(--text-faint);
 }
 
+/* ------------------------------------------------------------------ cadeau */
+
+.cta-wrap {
+  margin: 1.75rem 0 0;
+}
+
+.cta {
+  display: inline-block;
+  padding: 0.85rem 1.5rem;
+  border-radius: 999px;
+  background: var(--brass);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-decoration: none;
+}
+
+.cta:hover {
+  background: color-mix(in srgb, var(--brass) 85%, var(--chalk));
+  color: var(--ink);
+}
+
 /* ------------------------------------------------------------------ sources */
 
 .sources {

@@ -27,7 +27,7 @@ h1 span{color:var(--ochre)}
 .sub{font-size:12.5px;color:var(--muted);line-height:1.35}
 .ctrl{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .seg{display:flex;padding:4px;gap:2px}
-.seg button,.tbtn{appearance:none;border:0;background:transparent;color:var(--text);font:600 13px/1 "Instrument Sans",system-ui,sans-serif;padding:10px 14px;border-radius:10px;cursor:pointer;white-space:nowrap}
+.seg button,.tbtn{appearance:none;border:0;background:transparent;color:var(--text);font:600 13px/1 "Instrument Sans",system-ui,sans-serif;padding:10px 14px;border-radius:10px;cursor:pointer;white-space:nowrap;text-decoration:none}
 .seg button[aria-pressed="true"]{background:var(--ochre);color:var(--ochre-ink)}
 .seg button:not([aria-pressed="true"]):hover,.tbtn:hover{background:rgba(246,235,221,.08)}
 .tbtn{display:flex;align-items:center;gap:7px;padding:10px 13px}
@@ -80,6 +80,7 @@ button:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
       <button id="mTour" aria-pressed="false">Visite 360°</button>
     </div>
     <div class="panel seg">
+      <a class="tbtn" href="/voyage.html">↺ Voyage complet</a>
       <button class="tbtn" id="tNight" aria-pressed="false"><span class="dot"></span>Nuit</button>
       <button class="tbtn" id="tAuto" aria-pressed="true"><span class="dot"></span>Rotation</button>
       <button class="tbtn" id="tFull" aria-pressed="false"><span class="dot"></span>Plein écran</button>

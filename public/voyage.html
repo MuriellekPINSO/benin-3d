@@ -1,0 +1,84 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Un cadeau, en 3D — de Cotonou à Ouidah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{ --ground:#0b1210; --sun:#E3B84E; --leaf:#4E9D6E; --ochre:#E3A54E; --text:#EAF4EF; --muted:#B9CFC7; }
+html,body{height:100%}
+body{margin:0;background:var(--ground);color:var(--text);font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+.stage{position:fixed;inset:0}
+.stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.jump{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 18px);z-index:5}
+.jump button{appearance:none;border:1px solid rgba(234,244,239,.22);background:rgba(11,18,16,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:var(--text);font:600 14px/1 "Instrument Sans",system-ui,sans-serif;padding:13px 20px;border-radius:999px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.jump button:hover{background:rgba(78,157,110,.28);border-color:var(--leaf)}
+.transition{position:fixed;inset:0;z-index:10;display:grid;place-items:center;background:radial-gradient(120% 120% at 50% 40%,#14302a 0%,#0a1210 60%,#070c0a 100%);opacity:0;pointer-events:none;transition:opacity .7s ease}
+.transition.show{opacity:1;pointer-events:auto}
+.transition__inner{text-align:center;max-width:520px;padding:0 24px}
+.transition__eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--sun);font-weight:600;opacity:0;transform:translateY(8px);animation:rise .6s ease forwards .15s}
+.transition__inner h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:clamp(28px,5vw,44px);font-weight:800;margin:10px 0 14px;letter-spacing:-.01em;opacity:0;transform:translateY(10px);animation:rise .7s ease forwards .35s}
+.transition__inner p{font-size:15px;line-height:1.5;color:var(--muted);margin:0;opacity:0;transform:translateY(8px);animation:rise .7s ease forwards .55s}
+@keyframes rise{to{opacity:1;transform:none}}
+.path{width:min(70vw,420px);height:2px;background:linear-gradient(90deg,transparent,rgba(227,184,78,.5),transparent);margin:22px auto 0;position:relative;overflow:visible}
+.path::after{content:'✦';position:absolute;top:-9px;left:0;color:var(--sun);animation:travel 3.1s linear forwards}
+@keyframes travel{from{left:0}to{left:100%}}
+#loading-note{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);font-size:11px;color:var(--muted);z-index:1;opacity:.7}
+</style>
+
+<div class="stage" id="stage-cotonou">
+  <iframe id="frame-cotonou" src="/cotonou.html" title="Cotonou en 3D"></iframe>
+</div>
+<div class="stage" id="stage-ouidah" hidden>
+  <iframe id="frame-ouidah" title="Arène de Ouidah en 3D"></iframe>
+</div>
+
+<div class="transition" id="transition">
+  <div class="transition__inner">
+    <p class="transition__eyebrow">En route</p>
+    <h2>Direction Ouidah</h2>
+    <p>Le long de la côte atlantique, jusqu'à l'arène du Vodun Days.</p>
+    <div class="path"></div>
+  </div>
+</div>
+
+<div class="jump">
+  <button id="goto-ouidah">Partir pour Ouidah →</button>
+  <button id="goto-cotonou" hidden>← Retour à Cotonou</button>
+</div>
+
+<script>
+(function(){
+  var stageC = document.getElementById('stage-cotonou');
+  var stageO = document.getElementById('stage-ouidah');
+  var frameO = document.getElementById('frame-ouidah');
+  var trans = document.getElementById('transition');
+  var eyebrow = trans.querySelector('.transition__eyebrow');
+  var title = trans.querySelector('h2');
+  var text = trans.querySelector('p:last-of-type');
+  var btnGo = document.getElementById('goto-ouidah');
+  var btnBack = document.getElementById('goto-cotonou');
+  var ouidahLoaded = false;
+
+  function travel(toOuidah){
+    if (toOuidah && !ouidahLoaded) { frameO.src = '/ouidah.html'; ouidahLoaded = true; }
+    eyebrow.textContent = toOuidah ? 'En route' : 'Retour';
+    title.textContent = toOuidah ? 'Direction Ouidah' : 'Retour à Cotonou';
+    text.textContent = toOuidah
+      ? "Le long de la côte atlantique, jusqu'à l'arène du Vodun Days."
+      : "On repart vers la Corniche, l'Amazone et l'Étoile Rouge.";
+    trans.querySelectorAll('.path').forEach(function(p){ p.style.animation='none'; p.offsetHeight; p.style.animation=''; });
+    var after = trans.querySelector('.path::after');
+    trans.classList.add('show');
+    btnGo.hidden = true; btnBack.hidden = true;
+    setTimeout(function(){
+      stageC.hidden = toOuidah; stageO.hidden = !toOuidah;
+      btnGo.hidden = toOuidah; btnBack.hidden = !toOuidah;
+    }, 1700);
+    setTimeout(function(){ trans.classList.remove('show'); }, 3100);
+  }
+  btnGo.addEventListener('click', function(){ travel(true); });
+  btnBack.addEventListener('click', function(){ travel(false); });
+})();
+</script>
+
+</body></html>
